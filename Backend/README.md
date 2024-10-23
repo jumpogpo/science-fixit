@@ -1,85 +1,106 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# 🛠️ Science Fixit Backend
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🏓 Table of Contents
 
-## Description
+- [🛠️ Science Fixit Backend](#️-science-fixit-backend)
+  - [🏓 Table of Contents](#-table-of-contents)
+  - [🤔 What is Science Fixit Backend?](#-what-is-science-fixit-backend)
+  - [🛠️ Features](#️-features)
+  - [🚀 Technologies](#-technologies)
+  - [⚙️ Setup and Installation](#️-setup-and-installation)
+  - [📝 License](#-license)
+  - [💕 Contributors](#-contributors)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🤔 What is Science Fixit Backend?
 
-## Project setup
+The **Science Fixit Backend** serves as the server-side component of the Science Fixit platform. It is responsible for managing data, processing requests, and ensuring smooth communication between the frontend and the database. This backend system allows users to report repairs, track the status of their requests, and manage user roles, all while maintaining secure data handling and efficient database interactions. Built using modern technologies, it is designed to be scalable and reliable, providing a seamless experience for users at the Faculty of Science at King Mongkut's Institute of Technology Ladkrabang (KMITL).
 
-```bash
-$ npm install
-```
+## 🛠️ Features
 
-## Compile and run the project
+1. **Report Repairs**: Easily report issues or request repairs for equipment.
+2. **View Repair Requests with Status**: Check submitted requests along with their current status.
+3. **User Management**: Effectively manage both technician users and general users.
+4. **Repair Statistics**: View statistics on repair request statuses in chart form.
 
-```bash
-# development
-$ npm run start
+## 🚀 Technologies
 
-# watch mode
-$ npm run start:dev
+- 💻 **TypeScript** - A typed superset of JavaScript for better code quality.
+- 🐦 **NestJS** - A framework for building scalable server-side applications.
+- 🗄️ **Prisma** - An ORM for simplified database management.
+- 🐘 **PostgreSQL** - A powerful open-source relational database.
+- 🐳 **Docker** - A platform for containerizing applications.
+- 🌐 **Node.js** - A JavaScript runtime for server-side development.
+- ⚡ **Bun** - A fast JavaScript runtime for running and bundling apps.
 
-# production mode
-$ npm run start:prod
-```
+## ⚙️ Setup and Installation
 
-## Run tests
+To set up the Science Fixit Backend, follow these steps:
 
-```bash
-# unit tests
-$ npm run test
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/jumpogpo/science-fixit.git
+   cd science-fixit
+   ```
 
-# e2e tests
-$ npm run test:e2e
+2. **Create and Configure the .env File**:
+   - Copy the `.env.example` file to `.env`.
+   - Add the following environment variables in your `.env` file:
+     ```
+     DATABASE_URL=<your_database_url>
+     JWT_SECRET=<your_jwt_secret>
+     GOOGLE_CLIENT_ID=<your_google_client_id>
+     GOOGLE_CLIENT_SECRET=<your_google_client_secret>
+     ```
 
-# test coverage
-$ npm run test:cov
-```
+3. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-## Resources
+4. **Start the Database Container:**:
+    - Before starting the container, ensure you set the database POSTGRES_USER and POSTGRES_PASSWORD in the [docker-compose.yml](./docker-compose.yml) file.
+    - Then, run:
+    ```bash
+    docker compose up -d
+    ```
 
-Check out a few resources that may come in handy when working with NestJS:
+5. **Migrate the Database with Prisma**:
+   ```bash
+   npx prisma migrate dev
+   ```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+6. **Run the Application**:
+   ```bash
+   npm run start:dev
+   ```
+    Once the application is running, you can access the AP  documentation at [http://localhost:3000/docs](http://localhost:3000/docs) to explore the available endpoints an their functionalities.
 
-## Support
+## 📝 License
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+This project is licensed under the GNU General Public License v3.0. For more details, please refer to the [LICENSE](../LICENSE) file.
 
-## Stay in touch
+## 💕 Contributors
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/jumpogpo">
+        <img src="https://avatars.githubusercontent.com/u/14148557?v=4" width="100px;" alt="jumpogpo"/>
+        <br />
+        <sub><b>jumpogpo</b></sub>
+      </a>
+      <br />
+      <a title="Backend Developer" href="https://github.com/jumpogpo">💻</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/chomphoo46">
+        <img src="https://avatars.githubusercontent.com/u/140147946?v=4" width="100px;" alt="chomphoo46"/>
+        <br />
+        <sub><b>Chomphoo Inchan</b></sub>
+      </a>
+      <br />
+      <a title="Frontend Developer" href="https://github.com/chomphoo46">🎨</a>
+    </td>
+  </tr>
+</table>
