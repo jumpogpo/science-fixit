@@ -12,6 +12,10 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
+  app.enableCors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  });
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Science Fixit API')

@@ -40,7 +40,13 @@ export class AuthController {
   })
   async login(@Request() req, @Res({ passthrough: true }) res) {
     const { accessToken } = this.authService.login(req.user);
-    res.cookie('access_token', accessToken, { httpOnly: true });
+
+    res.cookie('access_token', accessToken, {
+      httpOnly: true,
+      secure: false, // true for HTTPS
+      sameSite: 'None',
+    });
+
     return { message: 'Login successful' };
   }
 
@@ -58,7 +64,13 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Google login callback' })
   async googleAuthRedirect(@Request() req, @Res({ passthrough: true }) res) {
     const { accessToken } = await this.authService.googleLogin(req.user);
-    res.cookie('access_token', accessToken, { httpOnly: true });
+
+    res.cookie('access_token', accessToken, {
+      httpOnly: true,
+      secure: false, // true for HTTPS
+      sameSite: 'None',
+    });
+
     return res.redirect('/');
   }
 }
