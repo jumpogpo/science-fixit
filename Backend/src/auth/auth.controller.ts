@@ -42,9 +42,9 @@ export class AuthController {
     const { accessToken } = this.authService.login(req.user);
 
     res.cookie('access_token', accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'None',
+      httpOnly: false,
+      secure: false,
+      sameSite: 'strict',
     });
 
     return { message: 'Login successful' };
@@ -66,9 +66,9 @@ export class AuthController {
     const { accessToken } = await this.authService.googleLogin(req.user);
 
     res.cookie('access_token', accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'None',
+      httpOnly: false,
+      secure: false,
+      sameSite: 'strict',
     });
 
     return res.redirect('/');
