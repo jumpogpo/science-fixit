@@ -43,7 +43,7 @@ export class AuthController {
 
     res.cookie('access_token', accessToken, {
       httpOnly: true,
-      secure: false, // true for HTTPS
+      secure: true,
       sameSite: 'None',
     });
 
@@ -67,7 +67,7 @@ export class AuthController {
 
     res.cookie('access_token', accessToken, {
       httpOnly: true,
-      secure: false, // true for HTTPS
+      secure: true,
       sameSite: 'None',
     });
 
