@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String               @id @default(cuid())
+  email      String               @unique
+  password   String
+  role       Role                 @default(USER)
+  googleId   String?
+  technician Technician?
+  requests   MaintenanceRequest[]
+}
+
+model Technician {
+  id                 String              @id @default(cuid())
+  firstName          String
+  lastName           String
+  sex                Sex
+  phoneNumber        String
+  user               User                @relation(fields: [userId], references: [id])
+  userId             String              @unique
+  maintenanceRecords MaintenanceRecord[]
+}
+
+model MaintenanceRequest {
+  id            String             @id @default(cuid())
+  building      String
+  room          String
+  floor         Int
+  requestDate   DateTime           @default(now())
+  description   String
+  equipment     String
+  imageFileName String
+  status        RequestStatus      @default(PENDING)
+  user          User               @relation(fields: [userId], references: [id])
+  userId        String
+  records       MaintenanceRecord?
+}
+
+model MaintenanceRecord {
+  id            String             @id @default(cuid())
+  recordDate    DateTime           @default(now())
+  details       String
+  imageFileName String
+  technician    Technician         @relation(fields: [technicianId], references: [id])
+  technicianId  String
+  request       MaintenanceRequest @relation(fields: [requestId], references: [id])
+  requestId     String             @unique
+}
+
+enum Sex {
+  MALE
+  FEMALE
+}
+
+enum Role {
+  USER
+  TECHNICIAN
+  ADMIN
+}
+
+enum RequestStatus {
+  PENDING
+  IN_PROGRESS
+  WAITING_FOR_PART
+  NOT_REPAIRABLE
+  COMPLETED
+}

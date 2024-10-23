@@ -1,0 +1,24 @@
+services:
+  postgres:
+    container_name: postgres_db
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: jumpogpo
+      POSTGRES_PASSWORD: "&aPV66<xY563"
+      POSTGRES_DB: maintenance_system
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - postgres-database-default
+
+volumes:
+  postgres_data:
+    name: postgres_data
+    driver: local
+
+networks:
+  postgres-database-default:
+    name: postgres-database-default
