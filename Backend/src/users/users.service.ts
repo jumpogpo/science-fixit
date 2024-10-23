@@ -52,13 +52,25 @@ export class UsersService {
   }
 
   // Get all users
-  async getUsers(req): Promise<UsersDto[]> {
+  async getUsers(req, filter?: string): Promise<UsersDto[]> {
     const user = await this.findByEmail(req.user.email);
-
-    if (user.role !== Role.ADMIN)
+  
+    if (user.role !== Role.ADMIN) {
       throw new UnauthorizedException("You don't have permission");
-
+    }
+  
+    // Dynamic filter object for Prisma query
+    const where: any = {};
+  
+    if (filter) {
+      where.OR = [
+        { email: { contains: filter, mode: 'insensitive' } }, // Case-insensitive match on email
+        { id: { contains: filter } }, // Match on id
+      ];
+    }
+  
     return this.prisma.user.findMany({
+      where,
       select: {
         id: true,
         email: true,

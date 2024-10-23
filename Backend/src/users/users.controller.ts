@@ -8,11 +8,18 @@ import {
   Param,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { RegisterDto } from './dto/register-users.dto';
 import { UpdateUsersRoleDto } from './dto/update-users-role.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { unauthorizedResponse } from './response/unauthorized-response';
 import {
@@ -64,6 +71,12 @@ export class UsersController {
   // Get all users
   @Get()
   @UseGuards(JwtAuthGuard)
+  @ApiQuery({
+    name: 'filter',
+    required: false,
+    type: String,
+    description: 'Filter by email or ID',
+  })
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({
     status: 200,
@@ -72,8 +85,8 @@ export class UsersController {
     isArray: true,
   })
   @ApiResponse(unauthorizedResponse)
-  async getUsers(@Request() req) {
-    return this.usersService.getUsers(req);
+  async getUsers(@Request() req, @Query('filter') filter?: string) {
+    return this.usersService.getUsers(req, filter);
   }
 
   // Delete user by id

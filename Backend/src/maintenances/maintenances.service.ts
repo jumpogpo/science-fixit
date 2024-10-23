@@ -9,7 +9,7 @@ import { PrismaService } from 'src/prisma.service';
 import * as fs from 'fs';
 import { extname } from 'path';
 import { MaintenanceStatusUpdateDto } from './dto/update-maintenances-status.dto';
-import { Role, User } from '@prisma/client';
+import { RequestStatus, Role, User } from '@prisma/client';
 import { UsersService } from 'src/users/users.service';
 import { MaintenanceRecordCreateDto } from './dto/create-maintenances-record.dto';
 import { v4 as uuidv4 } from 'uuid';
@@ -22,8 +22,17 @@ export class MaintenancesService {
   ) {}
 
   // Get all maintenance requests
-  async getMaintenances() {
+  async getMaintenances(filters: {
+    requestDate?: Date;
+    id?: string;
+    status?: RequestStatus;
+  }) {
     return await this.prisma.maintenanceRequest.findMany({
+      where: {
+        ...(filters.requestDate && { requestDate: filters.requestDate }),
+        ...(filters.id && { id: filters.id }),
+        ...(filters.status && { status: filters.status }),
+      },
       select: {
         id: true,
         building: true,

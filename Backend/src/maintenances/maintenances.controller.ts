@@ -11,6 +11,7 @@ import {
   UseGuards,
   UseInterceptors,
   ParseFilePipe,
+  Query,
 } from '@nestjs/common';
 import { MaintenancesService } from './maintenances.service';
 import {
@@ -19,6 +20,7 @@ import {
   ApiResponse,
   ApiParam,
   ApiConsumes,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { MaintenanceCreateDto } from './dto/create-maintenances.dto';
 import { MaintenanceStatusUpdateDto } from './dto/update-maintenances-status.dto';
@@ -34,6 +36,7 @@ import {
   MaintenanceRecordUpdateResponseDto,
 } from './dto/response-maintenances.dto';
 import { unauthorizedResponse } from 'src/users/response/unauthorized-response';
+import { RequestStatus } from '@prisma/client';
 
 @ApiTags('Maintenances')
 @Controller('maintenances')
@@ -42,14 +45,41 @@ export class MaintenancesController {
 
   // Get all maintenance requests
   @Get()
+  @ApiQuery({
+    name: 'requestDate',
+    required: false,
+    type: Date,
+    description: 'Filter by request date',
+  })
+  @ApiQuery({
+    name: 'id',
+    required: false,
+    type: String,
+    description: 'Filter by maintenance request ID',
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    enum: RequestStatus,
+    type: String,
+    description: 'Filter by status',
+  })
   @ApiOperation({ summary: 'Get all maintenance requests' })
   @ApiResponse({
     status: 200,
     description: 'Return all maintenance requests',
     type: [GetMaintenancesResponseDto],
   })
-  getMaintenances() {
-    return this.maintenancesService.getMaintenances();
+  getMaintenances(
+    @Query('requestDate') requestDate?: Date,
+    @Query('id') id?: string,
+    @Query('status') status?: RequestStatus,
+  ) {
+    return this.maintenancesService.getMaintenances({
+      requestDate,
+      id,
+      status,
+    });
   }
 
   // Get maintenance request by id

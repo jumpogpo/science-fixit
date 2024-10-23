@@ -6,6 +6,7 @@ export class MaintenanceStatusUpdateDto {
   @ApiProperty({
     type: 'String',
     enum: RequestStatus,
+    enumName: 'RequestStatus',
     description:
       'The new status for the maintenance record. This value must be a valid role defined in the system.',
   })
