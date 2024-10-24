@@ -111,6 +111,17 @@ export class MaintenanceRecordUpdateResponseDto {
   readonly requestId: string;
 }
 
+export class MaintenanceRequestNotFoundDto {
+  @ApiProperty({ type: String, example: 'Maintenance request not found' })
+  readonly message: string;
+
+  @ApiProperty({ type: String, example: 'Not Found' })
+  readonly error: string;
+
+  @ApiProperty({ type: Number, example: 404 })
+  readonly statusCode: number;
+}
+
 export class MaintenanceRequestNotFoundResponse {
   message = 'Maintenance request not found';
   error = 'Not Found';

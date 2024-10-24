@@ -9,6 +9,8 @@ import {
   UseGuards,
   Request,
   Query,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { RegisterDto } from './dto/register-users.dto';
@@ -94,13 +96,14 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiOperation({ summary: 'Delete user' })
-  @ApiResponse({ status: 200, description: 'User deleted' })
+  @ApiResponse({ status: 204, description: 'User deleted' })
   @ApiResponse(unauthorizedResponse)
   @ApiResponse({
     status: 404,
     description: 'User not found',
     type: DeleteUserNotFoundResponseDto,
   })
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(@Request() req, @Param('id') id: string) {
     return this.usersService.deleteUser(req, id);
   }

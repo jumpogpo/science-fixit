@@ -12,6 +12,9 @@ import {
   UseInterceptors,
   ParseFilePipe,
   Query,
+  Delete,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { MaintenancesService } from './maintenances.service';
 import {
@@ -34,6 +37,7 @@ import {
   MaintenanceRequestNotFoundResponseDto,
   MaintenanceRecordConflictResponseDto,
   MaintenanceRecordUpdateResponseDto,
+  MaintenanceRequestNotFoundDto,
 } from './dto/response-maintenances.dto';
 import { unauthorizedResponse } from 'src/users/response/unauthorized-response';
 import { RequestStatus } from '@prisma/client';
@@ -138,12 +142,36 @@ export class MaintenancesController {
     type: MaintenanceRequestCreateDto,
   })
   @ApiResponse(unauthorizedResponse)
+  @ApiResponse({
+    status: 404,
+    description: 'Maintenance request not found',
+    type: MaintenanceRequestNotFoundDto,
+  })
   async updateMaintenanceStatus(
     @Request() req,
     @Param('id') id: string,
     @Body() body: MaintenanceStatusUpdateDto,
   ) {
     return this.maintenancesService.updateMaintenanceStatus(req, id, body);
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Delete maintenance request' })
+  @ApiParam({ name: 'id', type: String, description: 'Maintenance request ID' })
+  @ApiResponse({
+    status: 204,
+    description: 'Maintenance request deleted',
+  })
+  @ApiResponse(unauthorizedResponse)
+  @ApiResponse({
+    status: 404,
+    description: 'Maintenance request not found',
+    type: MaintenanceRequestNotFoundDto,
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteMaintenanceRequest(@Request() req, @Param('id') id: string) {
+    return this.maintenancesService.deleteMaintenanceRequest(req, id);
   }
 
   // Create maintenance record
@@ -159,6 +187,11 @@ export class MaintenancesController {
     type: MaintenanceRecordUpdateResponseDto,
   })
   @ApiResponse(unauthorizedResponse)
+  @ApiResponse({
+    status: 404,
+    description: 'Maintenance request not found',
+    type: MaintenanceRequestNotFoundDto,
+  })
   @ApiResponse({
     status: 409,
     description: 'This maintenance request already has a record.',
@@ -197,6 +230,11 @@ export class MaintenancesController {
     type: MaintenanceRecordUpdateResponseDto,
   })
   @ApiResponse(unauthorizedResponse)
+  @ApiResponse({
+    status: 404,
+    description: 'Maintenance request not found',
+    type: MaintenanceRequestNotFoundDto,
+  })
   async updateRecordMaintenanceRequest(
     @Request() req,
     @Param('id') id: string,
@@ -215,5 +253,28 @@ export class MaintenancesController {
       body,
       image,
     );
+  }
+
+  // Delete maintenance record
+  @Delete(':id/record')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Delete maintenance record' })
+  @ApiParam({ name: 'id', type: String, description: 'Maintenance request ID' })
+  @ApiResponse({
+    status: 204,
+    description: 'Maintenance record deleted',
+  })
+  @ApiResponse(unauthorizedResponse)
+  @ApiResponse({
+    status: 404,
+    description: 'Maintenance request not found',
+    type: MaintenanceRequestNotFoundDto,
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteRecordMaintenanceRequest(
+    @Request() req,
+    @Param('id') id: string,
+  ) {
+    return this.maintenancesService.deleteMaintenanceRecord(req, id);
   }
 }

@@ -56,7 +56,7 @@ model MaintenanceRecord {
   imageFileName String
   technician    Technician         @relation(fields: [technicianId], references: [id])
   technicianId  String
-  request       MaintenanceRequest @relation(fields: [requestId], references: [id])
+  request       MaintenanceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
   requestId     String             @unique
 }
 

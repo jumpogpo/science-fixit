@@ -143,15 +143,42 @@ export class MaintenancesService {
     if (user.role !== Role.TECHNICIAN && user.role !== Role.ADMIN)
       throw new UnauthorizedException("You don't have permission");
 
-    const maintenanceRequest = await this.prisma.maintenanceRequest.update({
-      where: { id },
-      data: { status: body.status },
-    });
+    try {
+      const updatedMaintenanceRequest =
+        await this.prisma.maintenanceRequest.update({
+          where: { id },
+          data: { status: body.status },
+        });
 
-    if (!maintenanceRequest)
-      throw new NotFoundException('Maintenance request not found');
+      return updatedMaintenanceRequest;
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException('Maintenance request not found');
+      }
 
-    return maintenanceRequest;
+      throw new Error('Failed to update maintenance request');
+    }
+  }
+
+  // Delete maintenance request
+  async deleteMaintenanceRequest(req, id: string) {
+    const user: User = await this.usersService.findByEmail(req.user.email);
+
+    if (!user) throw new NotFoundException('User not found');
+    if (user.role !== Role.TECHNICIAN && user.role !== Role.ADMIN)
+      throw new UnauthorizedException("You don't have permission");
+
+    try {
+      await this.prisma.maintenanceRequest.delete({
+        where: { id },
+      });
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException('Maintenance request not found');
+      }
+
+      throw new Error('Failed to delete maintenance request');
+    }
   }
 
   // Create maintenance record
@@ -255,7 +282,43 @@ export class MaintenancesService {
         },
       });
 
+      await this.removeFile(maintenanceRequest.records.imageFileName);
       return maintenanceRecord;
+    });
+  }
+
+  async deleteMaintenanceRecord(req, id: string) {
+    const user = await this.usersService.findByEmail(req.user.email);
+
+    if (!user) throw new NotFoundException('User not found');
+
+    if (user.role !== Role.TECHNICIAN && user.role !== Role.ADMIN)
+      throw new UnauthorizedException("You don't have permission");
+
+    return this.prisma.$transaction(async (prisma) => {
+      // Step 1: Find the maintenance request
+      const maintenanceRequest = await prisma.maintenanceRequest.findUnique({
+        where: { id },
+        include: {
+          records: true,
+        },
+      });
+
+      if (!maintenanceRequest)
+        throw new NotFoundException('Maintenance request not found');
+
+      if (!maintenanceRequest.records)
+        throw new NotFoundException(
+          'This maintenance request does not have a record.',
+        );
+
+      // Step 2: Delete the maintenance record
+      await prisma.maintenanceRecord.delete({
+        where: { id: maintenanceRequest.records.id },
+      });
+
+      // Step 3: Remove the image file
+      await this.removeFile(maintenanceRequest.records.imageFileName);
     });
   }
 
@@ -268,5 +331,21 @@ export class MaintenancesService {
     writeStream.write(image.buffer);
     writeStream.end();
     return newFileName;
+  }
+
+  // Remove file manually
+  private async removeFile(imageFileName: string): Promise<void> {
+    const filePath = `./uploads/${imageFileName}`;
+
+    try {
+      await fs.promises.access(filePath);
+      await fs.promises.unlink(filePath);
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        // File does not exist
+      } else {
+        throw new Error('Failed to remove the file');
+      }
+    }
   }
 }
