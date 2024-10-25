@@ -21,6 +21,13 @@ export class UsersDto {
   readonly technicians?: Technician[];
 }
 
+export class UsersMaintenanceDto {
+  @ApiProperty({ type: String, description: 'User Email' })
+  @IsNotEmpty()
+  @IsString()
+  readonly email: string;
+}
+
 export class PermissionDeniedResponseDto {
   @ApiProperty({ example: 'Permission Denied' })
   message: string;

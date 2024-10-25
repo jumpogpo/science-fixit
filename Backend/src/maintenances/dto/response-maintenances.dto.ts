@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { RequestStatus } from '@prisma/client';
 import { Records } from './records.dto';
+import { UsersMaintenanceDto } from 'src/users/dto/users.dto';
 
 export class GetMaintenancesResponseDto {
   @ApiProperty({ type: String })
@@ -30,8 +31,11 @@ export class GetMaintenancesResponseDto {
   @ApiProperty({ type: RequestStatus, enum: RequestStatus })
   readonly status: RequestStatus;
 
+  @ApiProperty({})
+  readonly user?: UsersMaintenanceDto;
+
   @ApiProperty({ type: Records })
-  readonly records: Records[];
+  readonly records?: Records[];
 }
 
 export class MaintenanceRequestCreateDto {

@@ -43,6 +43,11 @@ export class MaintenancesService {
         equipment: true,
         imageFileName: true,
         status: true,
+        user: {
+          select: {
+            email: true,
+          },
+        },
         records: {
           select: {
             id: true,
@@ -75,6 +80,11 @@ export class MaintenancesService {
         equipment: true,
         imageFileName: true,
         status: true,
+        user: {
+          select: {
+            email: true,
+          },
+        },
         records: {
           select: {
             id: true,
