@@ -71,6 +71,6 @@ export class AuthController {
       sameSite: 'strict',
     });
 
-    return res.redirect('/');
+    return res.redirect('http://localhost:5173/');
   }
 }
