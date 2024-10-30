@@ -56,7 +56,9 @@ export class AuthService {
     const payload = { email: user.email };
 
     return {
+      message: 'Login successful',
       accessToken: this.jwtService.sign(payload),
+      redirectUrl: 'http://localhost:5173/',
     };
   }
 }
