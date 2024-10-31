@@ -11,6 +11,8 @@ import {
   Query,
   HttpCode,
   HttpStatus,
+  UnauthorizedException,
+  NotFoundException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { RegisterDto } from './dto/register-users.dto';
@@ -69,6 +71,34 @@ export class UsersController {
       req.user.email,
     );
     return { id, email, role };
+  }
+
+  // Get user by userId
+  @Get('/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get user by id' })
+  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'User profile success',
+    type: GetProfileSuccessResponseDto,
+  })
+  @ApiResponse(unauthorizedResponse)
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
+    type: DeleteUserNotFoundResponseDto,
+  })
+  async getUserById(@Request() req, @Param('id') id: string) {
+    const user = await this.usersService.findByEmail(req.user.email);
+
+    if (user.role !== Role.ADMIN)
+      throw new UnauthorizedException("You don't have permission");
+
+    const findResult = await this.usersService.findById(id);
+
+    if (!findResult) throw new NotFoundException('User not found');
+    return findResult;
   }
 
   // Get all users
