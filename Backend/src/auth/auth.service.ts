@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -6,6 +6,8 @@ import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class AuthService {
+  private emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
   constructor(
     private userService: UsersService,
     private jwtService: JwtService,
@@ -29,6 +31,11 @@ export class AuthService {
   // Normal Login
   login(user: any) {
     const payload = { email: user.email, id: user.id };
+
+    if (!this.emailRegex.test(user.email)) {
+      throw new BadRequestException('Invalid email format');
+    }
+
     return {
       accessToken: this.jwtService.sign(payload),
     };
@@ -37,6 +44,11 @@ export class AuthService {
   // Google Login
   async googleLogin(user): Promise<any> {
     const { email, googleId } = user;
+
+    if (!this.emailRegex.test(user.email)) {
+      throw new BadRequestException('Invalid email format');
+    }
+
     let userData = await this.prisma.user.findUnique({ where: { email } });
 
     // Create user data when data is null

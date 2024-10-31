@@ -13,10 +13,15 @@ import { UpdateUsersRoleDto } from './dto/update-users-role.dto';
 
 @Injectable()
 export class UsersService {
+  private emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   constructor(private prisma: PrismaService) {}
 
   // Create user with email and password
   async create(createData: RegisterDto): Promise<User> {
+    if (!this.emailRegex.test(createData.email)) {
+      throw new BadRequestException('Invalid email format');
+    }
+
     const user: User | null = await this.prisma.user.findUnique({
       where: { email: createData.email },
     });
