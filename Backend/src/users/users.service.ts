@@ -122,9 +122,12 @@ export class UsersService {
         data: {
           role: body.role,
         },
+        select: {
+          id: true,
+          email: true,
+          role: true,
+        },
       });
-
-      delete updatedUser.password;
 
       return updatedUser;
     } catch (error) {

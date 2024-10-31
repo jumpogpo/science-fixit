@@ -32,6 +32,7 @@ import {
   RegisterFailResponseDto,
   DeleteUserNotFoundResponseDto,
   UpdatedUserRoleSuccessResponseDto,
+  GetAllUserSuccessResponseDto,
 } from './dto/users-response.dto';
 import { Role } from '@prisma/client';
 
@@ -98,6 +99,10 @@ export class UsersController {
     const findResult = await this.usersService.findById(id);
 
     if (!findResult) throw new NotFoundException('User not found');
+
+    delete findResult.password;
+    delete findResult.googleId;
+    delete findResult.technician?.userId;
     return findResult;
   }
 
@@ -120,7 +125,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'Get all users success',
-    type: GetProfileSuccessResponseDto,
+    type: GetAllUserSuccessResponseDto,
     isArray: true,
   })
   @ApiResponse(unauthorizedResponse)

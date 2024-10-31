@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '@prisma/client';
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Role, Technician } from '@prisma/client';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 export class RegisterSuccessResponseDto {
   @ApiProperty()
@@ -39,6 +39,29 @@ export class GetProfileSuccessResponseDto {
 
   @ApiProperty({ enum: Role })
   role: Role;
+
+  @ApiProperty({
+    type: 'object',
+    properties: {
+      id: { type: 'string' },
+      firstName: { type: 'string' },
+      lastName: { type: 'string' },
+      sex: { type: 'string' },
+      phoneNumber: { type: 'string' },
+    },
+  })
+  technician: Technician;
+}
+
+export class GetAllUserSuccessResponseDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty({ enum: Role })
+  role: Role;
 }
 
 export class DeleteUserNotFoundResponseDto {
@@ -68,13 +91,4 @@ export class UpdatedUserRoleSuccessResponseDto {
   @IsNotEmpty()
   @IsEnum(Role)
   role: Role;
-
-  @ApiProperty({
-    description: 'Optional Google ID',
-    type: String,
-    example: 'Optional Google ID',
-  })
-  @IsString()
-  @IsOptional()
-  googleId?: string;
 }
