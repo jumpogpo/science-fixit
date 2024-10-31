@@ -52,7 +52,7 @@ export class UsersService {
   }
 
   // Get all users
-  async getUsers(req, filter?: string): Promise<UsersDto[]> {
+  async getUsers(req, filter?: string, role?: Role): Promise<UsersDto[]> {
     const user = await this.findByEmail(req.user.email);
 
     if (user.role !== Role.ADMIN) {
@@ -67,6 +67,10 @@ export class UsersService {
         { email: { contains: filter, mode: 'insensitive' } }, // Case-insensitive match on email
         { id: { contains: filter } }, // Match on id
       ];
+    }
+
+    if (role) {
+      where.role = role; // Match on role
     }
 
     return this.prisma.user.findMany({

@@ -31,6 +31,7 @@ import {
   DeleteUserNotFoundResponseDto,
   UpdatedUserRoleSuccessResponseDto,
 } from './dto/users-response.dto';
+import { Role } from '@prisma/client';
 
 @ApiTags('Users')
 @Controller('users')
@@ -79,6 +80,12 @@ export class UsersController {
     type: String,
     description: 'Filter by email or ID',
   })
+  @ApiQuery({
+    name: 'role',
+    required: false,
+    enum: Role,
+    description: 'Filter by role',
+  })
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({
     status: 200,
@@ -87,8 +94,12 @@ export class UsersController {
     isArray: true,
   })
   @ApiResponse(unauthorizedResponse)
-  async getUsers(@Request() req, @Query('filter') filter?: string) {
-    return this.usersService.getUsers(req, filter);
+  async getUsers(
+    @Request() req,
+    @Query('filter') filter?: string,
+    @Query('role') role?: Role,
+  ) {
+    return this.usersService.getUsers(req, filter, role);
   }
 
   // Delete user by id
