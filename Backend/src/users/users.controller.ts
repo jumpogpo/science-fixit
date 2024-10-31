@@ -32,7 +32,6 @@ import {
   RegisterFailResponseDto,
   DeleteUserNotFoundResponseDto,
   UpdatedUserRoleSuccessResponseDto,
-  GetAllUserSuccessResponseDto,
 } from './dto/users-response.dto';
 import { Role } from '@prisma/client';
 
@@ -125,7 +124,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'Get all users success',
-    type: GetAllUserSuccessResponseDto,
+    type: GetProfileSuccessResponseDto,
     isArray: true,
   })
   @ApiResponse(unauthorizedResponse)

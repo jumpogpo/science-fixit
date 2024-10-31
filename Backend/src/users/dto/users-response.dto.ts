@@ -53,17 +53,6 @@ export class GetProfileSuccessResponseDto {
   technician: Technician;
 }
 
-export class GetAllUserSuccessResponseDto {
-  @ApiProperty()
-  id: string;
-
-  @ApiProperty()
-  email: string;
-
-  @ApiProperty({ enum: Role })
-  role: Role;
-}
-
 export class DeleteUserNotFoundResponseDto {
   @ApiProperty({ example: 'User with ID not found' })
   message: string;

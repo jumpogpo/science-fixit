@@ -79,6 +79,15 @@ export class UsersService {
         id: true,
         email: true,
         role: true,
+        technician: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            phoneNumber: true,
+            sex: true,
+          },
+        },
       },
     });
   }
