@@ -133,7 +133,9 @@ export class MaintenancesService {
           imageFileName: newFileName,
           user: {
             connect: {
-              id: req.user.id,
+              ...(req.user.id
+                ? { id: req.user.id }
+                : { email: req.user.email }),
             },
           },
         },
