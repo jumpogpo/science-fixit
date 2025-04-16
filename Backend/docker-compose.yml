@@ -5,12 +5,27 @@ services:
     restart: always
     environment:
       POSTGRES_USER: jumpogpo
-      POSTGRES_PASSWORD: "&aPV66<xY563"
+      POSTGRES_PASSWORD: '&aPV66<xY563'
       POSTGRES_DB: maintenance_system
     ports:
       - 5432:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - postgres-database-default
+
+  backend:
+    container_name: backend_service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      DATABASE_URL: postgresql://jumpogpo:&aPV66<xY563@postgres:5432/maintenance_system?schema=public
+    depends_on:
+      - postgres
     networks:
       - postgres-database-default
 
